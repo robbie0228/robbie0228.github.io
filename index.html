@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        body {
+            font-family: "Arial"
+        }
+
+        #title {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <textarea type="text" id="getUnparsed">Paste JSON and click "Parse!"</textarea><br>
+    <input type="button" onclick="parseAndDisplay()" value="Parse!"><br><br>
+
+    <p id="title">Patient Information</p>
+
+    <div id="patientInfo"></div>
+
+    <script>
+        function parseAndDisplay() {
+            let unparsed = document.getElementById("getUnparsed").value;
+            try {
+                var parsed = JSON.parse(unparsed);
+            } catch (err) {
+                alert("ERROR: JSON parsing failed.")
+            }
+            let familyNames = parsed["identifier"]["name"]["family"];
+            var familyName = familyNames[0];
+            if (familyName == undefined) {
+                alert("ALERT: no family names detected.")
+            }
+            for (let i = 1; i < familyNames.length; ++i) {
+                familyName += " ";
+                familyName += familyNames[i];
+            }
+            let givenNames = parsed["identifier"]["name"]["given"];
+            var givenName = givenNames[0];
+            if (givenName == undefined) {
+                alert("ERROR: no given names detected.")
+            }
+            for (let i = 1; i < givenNames.length; ++i) {
+                givenName += " ";
+                givenName += givenNames[i];
+            }
+            let patientName = givenName + " " + familyName;
+            let organizationName = parsed["identifier"]["managingOrganization"]["display"];
+            let gender = parsed["identifier"]["gender"];
+            let numOfConditions = parsed["identifier"]["conditions"].length;
+            let listOfConditions = "";
+            if (numOfConditions == 0) {
+                listOfConditions = "This patient does not have any conditions.";
+            }
+            else {
+                let conditions = parsed["identifier"]["conditions"];
+                listOfConditions = "- " + conditions[0];
+                for (let i = 1; i < conditions.length; i++) {
+                    listOfConditions += "\n";
+                    listOfConditions += "- " + conditions[i];
+                }
+            }
+
+            document.getElementById("patientInfo").innerText =
+                "Name of Patient: " + patientName + '\n' +
+                "Organization Name: " + organizationName + '\n' +
+                "Gender: " + gender + '\n' +
+                "Number of Conditions: " + numOfConditions + '\n' +
+                "List of Conditions: " + '\n' + listOfConditions;
+        }
+    </script>
+
+</body>
+
+</html>
