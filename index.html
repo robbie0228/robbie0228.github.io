@@ -14,10 +14,10 @@
 </head>
 
 <body>
-    <textarea type="text" id="getUnparsed">Paste JSON and click "Parse!"</textarea><br>
+    <textarea type="text" id="getUnparsed" rows="200" cols="80">Paste JSON and click "Parse!"</textarea><br>
     <input type="button" onclick="parseAndDisplay()" value="Parse!"><br><br>
 
-    <p id="title">Patient Information</p>
+    <p id="title"></p>
 
     <div id="patientInfo"></div>
 
@@ -63,7 +63,8 @@
                     listOfConditions += "- " + conditions[i];
                 }
             }
-
+            document.getElementById("title").innerText =
+                "Patient Information";
             document.getElementById("patientInfo").innerText =
                 "Name of Patient: " + patientName + '\n' +
                 "Organization Name: " + organizationName + '\n' +
